@@ -3,6 +3,7 @@ package com.apiproducts.products.models;
 import com.apiproducts.products.dtos.ProductDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 @Entity
 @Table(name="products")
@@ -11,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Product {
+public class Product extends RepresentationModel<Product> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
