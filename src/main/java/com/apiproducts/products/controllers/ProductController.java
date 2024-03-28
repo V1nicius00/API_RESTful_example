@@ -24,50 +24,28 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity getAllProducts(){
-        List<Product> allProducts = productService.findAll();
-        if(allProducts.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        for(Product product : allProducts){
-            String id = product.getId();
-            product.add(linkTo(methodOn(ProductController.class).getProductById(id)).withSelfRel());
-        }
-        return ResponseEntity.ok(allProducts);
+        return productService.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity getProductById(@PathVariable(value="id") String id){
-        Optional<Product> product = productService.findById(id);
-        if(product.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        product.get().add(linkTo(methodOn(ProductController.class).getAllProducts()).withRel("Products List"));
-        return ResponseEntity.ok(product);
+        return productService.getProductById(id);
     }
 
     @PostMapping
     public ResponseEntity postProduct(@RequestBody ProductDTO data) {
-        Product newProduct = new Product(data);
-        productService.save(newProduct);
-        return ResponseEntity.ok("Produto criado com sucesso!");
+        return productService.save(data);
     }
 
     @PutMapping
     @Transactional
     public ResponseEntity putProduct(@RequestBody ProductDTO data) {
-        Optional<Product> optionalProduct = productService.findById(data.id());
-        if(optionalProduct.isPresent()){
-            Product product = optionalProduct.get();
-            product.setName(data.name());
-            product.setPrice_in_cents(data.price_in_cents());
-            return ResponseEntity.ok("Produto atualizado!");
-        }
-        return ResponseEntity.notFound().build();
+        return productService.update(data);
     }
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity deleteProduct(@PathVariable String id){
+    public ResponseEntity deleteProduct(@PathVariable(value="id") String id){
         return productService.delete(id);
     }
 
