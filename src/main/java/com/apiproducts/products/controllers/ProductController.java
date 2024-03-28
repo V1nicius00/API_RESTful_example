@@ -49,7 +49,7 @@ public class ProductController {
     public ResponseEntity postProduct(@RequestBody ProductDTO data) {
         Product newProduct = new Product(data);
         productService.save(newProduct);
-        return ResponseEntity.ok("Produto criado com sucesso! " + newProduct);
+        return ResponseEntity.ok("Produto criado com sucesso!");
     }
 
     @PutMapping
@@ -60,7 +60,7 @@ public class ProductController {
             Product product = optionalProduct.get();
             product.setName(data.name());
             product.setPrice_in_cents(data.price_in_cents());
-            return ResponseEntity.ok("Produto atualizado! " + optionalProduct);
+            return ResponseEntity.ok("Produto atualizado!");
         }
         return ResponseEntity.notFound().build();
     }
@@ -68,13 +68,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @Transactional
     public ResponseEntity deleteProduct(@PathVariable String id){
-        Optional<Product> optionalProduct = productService.findById(id);
-        if(optionalProduct.isPresent()){
-            Product product = optionalProduct.get();
-            productService.delete(product);
-            return ResponseEntity.ok("Produto deletado com sucesso! " + optionalProduct);
-        }
-        return ResponseEntity.notFound().build();
+        return productService.delete(id);
     }
 
 }
